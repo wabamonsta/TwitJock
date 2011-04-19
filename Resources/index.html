@@ -1,0 +1,233 @@
+<html>
+<head>
+<link rel="stylesheet" href="css/main.css" type="text/css"/>
+<script src="js/jq.js" type="text/javascript"></script>
+<link href="js/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="js/jquery.scrollTo.js"></script>
+<script type="text/javascript">
+// Create Serato file if it didnt existed
+var parent = Titanium.Filesystem.getDocumentsDirectory();
+var new_folder = Titanium.Filesystem.getFile(parent, 'TwitJockFiles');
+var buildserato =Titanium.Filesystem.getFile(new_folder, 'Serato.txt');
+var Tj_serato = new Object;
+Tj_serato.file=buildserato ;
+
+if( !new_folder.exists() )
+{
+  new_folder.createDirectory();
+
+
+}
+if(!buildserato.exists()){
+    buildserato.write();
+}
+   $("#serato").val( buildserato.read())
+</script>
+
+
+
+<script type="text/javascript">
+// Get the File from serato session folder
+
+
+
+function serato_lastsession(){
+    var sep=Titanium.Filesystem.getSeparator();
+    var serato_location =Titanium.Filesystem.getFile(Titanium.Filesystem.getDocumentsDirectory() + sep +"TwitJockFiles"+sep+"Serato.txt" );
+    serato_location=serato_location.read();
+    var loc_array=serato_location.split(sep);
+    session_path=""; //nullify it once more
+    for(i=0; i<(loc_array.length-1);i++){
+      session_path+=  loc_array[i]+sep;
+    }
+    // Get session files
+   // alert(session_path)
+    var session_dir=Titanium.Filesystem.getFile(session_path);
+   var  ls=session_dir.getDirectoryListing();
+    var val;
+    ls.reverse();
+
+   var nfile=Titanium.Filesystem.getFile(ls[0]);
+  // var dfile=Titanium.Codec.encodeHexBinary(nfile.read());
+     var dfile=nfile.read();
+
+ //alert(dfile);
+ alert(ls[0]);
+    return  ls[0];
+
+
+return false;
+
+}
+
+
+
+
+// Add serato file to the system :)
+ function seratochk(){
+var parent = Titanium.Filesystem.getDocumentsDirectory();
+var new_folder = Titanium.Filesystem.getFile(parent, 'TwitJockFiles');
+var buildserato =Titanium.Filesystem.getFile(new_folder, 'Serato.txt');
+if($("#serato").val() ){
+var str=$("#serato").val();
+
+buildserato.write( str.replace(buildserato.read(),str) )
+}
+       $("#serato").val( buildserato.read());
+        $("#serato").select();
+ }
+
+
+$(document).ready(function() {
+
+	//Get the height of the first item
+	$('#mask').css({'height':$('#panel-1').height()});
+
+	//Calculate the total width - sum of all sub-panels width
+	//Width is generated according to the width of #mask * total of sub-panels
+	$('#panel').width(parseInt($('#mask').width() * $('#panel div').length));
+
+	//Set the sub-panel width according to the #mask width (width of #mask and sub-panel must be same)
+	$('#panel div').width($('#mask').width());
+
+	//Get all the links with rel as panel
+	$('a[rel=panel]').click(function () {
+
+		//Get the height of the sub-panel
+		var panelheight = $($(this).attr('href')).height();
+
+		//Set class for the selected item
+		$('a[rel=panel]').removeClass('selected');
+		$(this).addClass('selected');
+
+		//Resize the height
+		$('#mask').animate({'height':panelheight},{queue:false, duration:500});
+
+		//Scroll to the correct panel, the panel id is grabbed from the href attribute of the anchor
+		$('#mask').scrollTo($(this).attr('href'), 800);
+
+		//Discard the link default behavior
+		return false;
+	});
+  $("body").css("display", "none");
+
+      	    $("body").fadeIn(4000);
+});
+
+</script>
+
+<script type="text/php">
+class myTwitfeed{
+
+
+    function seratofeed($val){
+        //$window->alert($val);
+	//$x="$val";
+	
+  
+
+$fp=fopen("$val","r");
+$bin=fread($fp);
+$node = unpack("fvalue/nre/nli/a*payload", $bin);
+fclose($fp);
+
+ return $node;
+
+
+    }
+
+
+    //  use this function to convert binary back to readable ascii text
+
+      function bin2asc($in) //syntax - bin2asc("binary to convert");
+      {
+       $out = '';
+       for ($i = 0, $len = strlen($in); $i < $len; $i += 8)
+       {
+      $out .= chr(bindec(substr($in,$i,8)));
+       }
+       return $out;
+      }
+
+      function hextostr($x) {
+  $s='';
+  foreach(explode("\n",trim(chunk_split($x,2))) as $h) $s.=chr(hexdec($h));
+  return($s);
+}
+
+
+}
+$TwitFeed = new myTwitfeed();
+</script>
+
+
+
+</head>
+<body onload="focus()">
+<div id="header">
+    <div id="headcontainer">
+        <div id="logoTop"></div>
+        <div id="logoText"></div>
+        <div id="logoRep"></div>
+        <div id="logoEnds">
+            <div id="topmenu">
+            <ul>
+                <li ><a href="#panel-1" class="selected" rel="panel"><span>Last Tweet</span></a></li>
+                <li ><a href="#panel-2"  rel="panel"><span>Artist Search</span></a></li>
+                <li ><a href="#panel-3"  rel="panel"><span>Settings</span></a></li>
+            </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Slider divs-->
+
+<div id="scroller-body">
+	<div id="mask">
+		<div id="panel">
+			<div id="panel-1">
+                            <div class="clr"></div>
+			 <h2><img src="images/icons/twitter-256x256.png" width="28">Last Tweet</h2>
+                         <div id="mtweet"></div>
+                           <input type="text"  id="hme" readonly="readonly">;
+
+			</div>
+			<div id="panel-2">
+			     <form>
+
+                               <div class="sbar"> <h2><img src="images/icons/Search.png" width="28">Search</h2>
+                            <input type="text"  id="search" value ="Enter Artist Name" onfocus="this.value=''"; onblur="if(this.value==''){ this.value ='Enter Artist Name' }"></div>
+                            </form>
+			</div>
+			<div id="panel-3">
+
+			    <form>
+   <div class="clr"></div>
+                                <h2><img src="images/icons/Settings.png" width="28">Settings</h2>
+                                  <div class="clr"></div>
+                                <div>
+                                    <label>Drag and Drop your Serato Session Folder Below</label>
+                                    <textarea id="serato" style="width:80%;" onblur="seratochk()"></textarea>
+
+
+                                </div>
+                            </form>
+			</div>
+			<div id="panel-4">
+				.......
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+seratochk()
+
+
+var SeratoFeed = new Object();
+SeratoFeed.data=serato_lastsession();
+//alert(TwitFeed.seratofeed(SeratoFeed.data));
+$('#mtweet').html(TwitFeed.seratofeed(SeratoFeed.data));
+</script>
+
+</body>
+</html>
