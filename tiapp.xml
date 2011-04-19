@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ti:app xmlns:ti='http://ti.appcelerator.org'>
+<!-- These values are edited/maintained by Titanium Developer -->
+<id>com.wabamedia.twitjock</id>
+<name>TwitJock</name>
+<version>1.0</version>
+<publisher>Jermaine Byfield</publisher>
+<url>www.wabamedia.com</url>
+<icon>1289101680_twitter05.png</icon>
+<copyright>2010 by mrbyfield</copyright>
+<!-- Window Definition - these values can be edited -->
+<window>
+<id>initial</id>
+<title>TwitJock</title>
+<url>app://index.html</url>
+<width>512</width>
+<max-width>512</max-width>
+<min-width>0</min-width>
+<height>512</height>
+<max-height>512</max-height>
+<min-height>0</min-height>
+<fullscreen>false</fullscreen>
+<resizable>false</resizable>
+<chrome scrollbars="true">true</chrome>
+<maximizable>false</maximizable>
+<minimizable>true</minimizable>
+<closeable>true</closeable>
+</window>
+</ti:app>
